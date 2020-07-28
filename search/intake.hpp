@@ -36,6 +36,9 @@ namespace search
 
 		template <typename CHARACTER = char, typename ON_WORD, typename ON_BUFFER, typename IS_WORD = decltype(ascii::is_word_character) > void file(std::string_view name, ON_WORD&& on_word, ON_BUFFER && on_buffer, IS_WORD&& is_word = ascii::is_word_character)
 		{
+			if (!std::filesystem::file_size(name))
+				return;
+
 			auto map = mio::mmap_source(name);
 
 			if(on_buffer(map))

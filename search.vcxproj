@@ -210,6 +210,9 @@
     <ClInclude Include="search\intake.hpp" />
     <ClInclude Include="search\test.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitignore" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

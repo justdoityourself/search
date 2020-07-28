@@ -14,9 +14,11 @@ TEST_CASE("engine", "[search::]")
 	{
 		LeanLookup se("se.db");
 
-		se.recursive_folder("./", [&](auto& name, auto size)
+		size_t count = 0;
+
+		se.recursive_folder("../habitsmasher", [&](auto& name, auto size)
 		{
-			std::cout << name << " " << size << std::endl;
+			std::cout << name << " " << size << " " << count ++ << std::endl;
 		});
 	}
 

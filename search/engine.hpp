@@ -11,6 +11,8 @@
 
 #include "tdb/se.hpp"
 
+#include "d8u/util.hpp"
+
 namespace search
 {
 	namespace engine
@@ -19,11 +21,13 @@ namespace search
 		{
 			tdb::search_engine::LeanIndexStream index;
 
-			struct Record
+			struct _Record
 			{
 				tdb::Key16 file_id;
 				uint32_t rank;
 			};
+
+			using Record = d8u::PlainOldData<_Record>;
 
 		public:
 			LeanLookup(std::string_view database)
@@ -40,12 +44,12 @@ namespace search
 
 				tdb::Key16 key;
 
-				intake::file(source, [&](auto word)
+				intake::file(source, [&](auto _word)
 				{
-					auto key = std::string(word);
-					std::transform(key.begin(), key.end(), key.begin(), ::tolower);
+					std::string word(_word);
+					std::transform(word.begin(), word.end(), word.begin(), ::tolower);
 
-					keyword_stream.WriteLock(key, Record{ key,1 });
+					keyword_stream.WriteLock(word, Record{ key,1 });
 
 				}, [&](auto& buffer) 
 				{
