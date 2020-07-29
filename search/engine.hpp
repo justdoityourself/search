@@ -22,14 +22,6 @@ namespace search
 		{
 			tdb::search_engine::LeanIndexStream db;
 
-			struct _Record
-			{
-				tdb::Key16 file_id;
-				uint32_t rank;
-			};
-
-			using Record = d8u::PlainOldData<_Record>;
-
 		public:
 
 			LeanLookup(std::string_view database)
