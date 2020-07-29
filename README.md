@@ -2,7 +2,7 @@
 
 ## TLDR;
 
-TODO
+Cross-platform search engine written in C++.
 
 ## Getting Started
 
