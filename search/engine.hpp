@@ -35,6 +35,31 @@ namespace search
 				Intake
 			*/
 
+			template < typename T, typename D, typename IS_WORD = decltype(ascii::is_word_character) > void stream(const T& buffer, const D & id, size_t part, std::string_view file_name, std::string_view domain, IS_WORD&& is_word = ascii::is_word_character)
+			{
+				/*
+					Todo fix buffer segment word drop
+					Todo time
+					Todo id reduction prevents to key16 prevents block read ( Good thing? Yes. )
+
+					HARD BREAK, must have emplacelockif
+				*/
+
+				auto keyword_stream = db.Table<0>();
+				auto file_screen = db.Table<1>();
+
+				tdb::Key16 key(id);
+				auto [element, found] = file_screen.EmplaceIf(id, (uint32_t)0 /*Modified time*/, std::string(file_name) + "Part" + std::to_string(part), domain);
+
+				if (found)
+					return;
+
+				intake::buffer(buffer, [&](auto& word)
+				{
+					keyword_stream.WriteLock(word, gsl::span<uint8_t>((uint8_t*)&element, sizeof(uint32_t)));
+				}, is_word);
+			}
+
 			template < typename T, typename IS_WORD = decltype(ascii::is_word_character) > void file(const T& source, std::string_view file_name, std::string_view domain, IS_WORD&& is_word = ascii::is_word_character)
 			{
 				auto keyword_stream = db.Table<0>();
