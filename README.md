@@ -1,5 +1,13 @@
 # search
 
+## TLDR;
+
+TODO
+
+## Getting Started
+
+TODO
+
 ## Querys
 
 Space delimetered keywords. Un-prefixed keyword results are full joined, '+' inner joins that keyword results, '-' excludes keyword results:
