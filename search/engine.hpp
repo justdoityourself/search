@@ -19,7 +19,7 @@ namespace search
 	{
 		class LeanLookup
 		{
-			tdb::search_engine::LeanIndexStream index;
+			tdb::search_engine::LeanIndexStream db;
 
 			struct _Record
 			{
@@ -31,7 +31,9 @@ namespace search
 
 		public:
 			LeanLookup(std::string_view database)
-				: index(database) { }
+				: db(database) { }
+
+			auto& Database() { return db; }
 
 			/*
 				Intake
@@ -39,25 +41,24 @@ namespace search
 
 			template < typename T, typename IS_WORD = decltype(ascii::is_word_character) > void file(const T& source, IS_WORD&& is_word = ascii::is_word_character)
 			{
-				auto keyword_stream = index.Table<0>();
-				auto file_screen = index.Table<1>();
+				auto keyword_stream = db.Table<0>();
+				auto file_screen = db.Table<1>();
 
 				tdb::Key16 key;
+				uint32_t index;
 
-				intake::file(source, [&](auto _word)
+				intake::file(source, [&](auto & word)
 				{
-					std::string word(_word);
-					std::transform(word.begin(), word.end(), word.begin(), ::tolower);
-
-					keyword_stream.WriteLock(word, Record{ key,1 });
+					keyword_stream.WriteLock(word, gsl::span<uint8_t>((uint8_t*)&index,sizeof(uint32_t)));
 
 				}, [&](auto& buffer) 
 				{
 					key = tdb::Key16(buffer);
-					auto [ref_count,found] = file_screen.InsertLock(key, 1);
+					auto [element,found] = file_screen.EmplaceIf(key);
 
-					if (found)
-						*(ref_count)++;
+					index = element;
+					/*if (found)
+						*(ref_count)++;*/
 
 					return !found;
 				}, is_word);

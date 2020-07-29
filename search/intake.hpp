@@ -3,6 +3,8 @@
 #pragma once
 
 #include <string_view>
+#include <string>
+#include <set>
 
 #include "../mio.hpp"
 
@@ -14,6 +16,8 @@ namespace search
 	{
 		template <typename CHARACTER = char, typename DATA, typename ON_WORD, typename IS_WORD = decltype(ascii::is_word_character)> void buffer(const DATA & data, ON_WORD && on_word, IS_WORD&& is_word = ascii::is_word_character)
 		{
+			std::set<std::string> unique;
+
 			CHARACTER* u = (CHARACTER*) data.data(), *end, *start = nullptr;
 			size_t limit = data.size() / sizeof(CHARACTER);
 			end = u + limit;
@@ -26,7 +30,14 @@ namespace search
 					start = u;
 				else if (!word && start)
 				{
-					on_word(std::string_view(start, u - start));
+					std::string word_str(start, u - start);
+					std::transform(word_str.begin(), word_str.end(), word_str.begin(), ::tolower);
+
+					auto [i, inserted] = unique.emplace(std::move(word_str));
+
+					if(inserted)
+						on_word(*i);
+
 					start = nullptr;
 				}
 

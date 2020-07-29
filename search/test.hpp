@@ -20,6 +20,11 @@ TEST_CASE("engine", "[search::]")
 		{
 			std::cout << name << " " << size << " " << count ++ << std::endl;
 		});
+
+		auto table0 = se.Database().Table<0>();
+		auto population = table0.Index().Population();
+
+		std::cout << "Population: " << population.first << "/" << population.second << std::endl;
 	}
 
 	std::filesystem::remove_all("se.db");
