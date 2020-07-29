@@ -16,6 +16,6 @@ icecream +chocolate -vanila
 
 ## Todo
 
-* File type filtering.
-* File type comprehension.
+* File type filtering. ( Optimization, E.G. don't parse compressed or binary files )
+* File type comprehension. ( E.G. Ability to parse compressed archives, XML, PDF, DOCX files without taking in metadata )
 * Text encoding, utf8, usc16 ... ( Only ASCII currently supported )
