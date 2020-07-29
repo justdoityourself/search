@@ -10,6 +10,8 @@
 
 #include "ascii.hpp"
 
+#include "d8u/util.hpp"
+
 namespace search
 {
 	namespace intake
@@ -50,9 +52,11 @@ namespace search
 			if (!std::filesystem::file_size(name))
 				return;
 
+			auto time = d8u::util::GetFileWriteTime(name);
+
 			auto map = mio::mmap_source(name);
 
-			if(on_buffer(map))
+			if(on_buffer(map,time))
 				buffer(map, on_word, is_word);
 		}
 	}

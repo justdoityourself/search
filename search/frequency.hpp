@@ -30,7 +30,7 @@ namespace search
 
 					auto [i, did_insert] = map.try_emplace(key, 0);
 					i->second++;
-				}, [&](auto& buffer) { return true;}, is_word);
+				}, [&](auto& buffer,auto & time) { return true;}, is_word);
 			}
 
 			template < typename T, typename IS_WORD = decltype(ascii::is_word_character) > void buffer(const T& source, IS_WORD&& is_word = ascii::is_word_character)
@@ -112,7 +112,7 @@ namespace search
 
 				auto [i, did_insert] = map.try_emplace(key,0);
 				i->second++;
-			}, [&](auto& buffer) {return true;},is_word);
+			}, [&](auto& buffer,auto & time) {return true;},is_word);
 
 			return map;
 		}
